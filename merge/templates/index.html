@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>最爱陈佳小仙女~</title>
+{% load static %}
+</head>
+<body>
+<!--datatables.css-->
+<link rel="stylesheet" type="text/css" href="{% static 'DataTables-1.10.15/media/css/jquery.dataTables.css' %}">
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="{% static 'DataTables-1.10.15/media/js/jquery.js' %}"></script>
+<!-- DataTables.js -->
+<script type="text/javascript" charset="utf8" src="{% static 'DataTables-1.10.15/media/js/jquery.dataTables.js' %}"></script>
+
+<!--引入bootstrap-->
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-4.4.1-dist/css/bootstrap.css' %}">
+<!--<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-4.4.1-dist/css/bootstrap-grid.css' %}">-->
+<!--<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-4.4.1-dist/css/bootstrap-reboot.css' %}">-->
+
+<script type="text/javascript" charset="utf8" src="{% static 'bootstrap-4.4.1-dist/js/bootstrap.js' %}"></script>
+
+<!--导航栏-->
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <!-- Brand -->
+  <a class="navbar-brand" href="#">最爱陈佳小仙女~</a>
+
+  <!-- Toggler/collapsibe Button -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Navbar links -->
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link btn btn-default btn-lg disabled" href="#" >大型招聘会</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link btn btn-default btn-lg" href="/seminar/">宣讲会</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="table-responsive container"> <!--container 居中显示，responsive 响应式表格-->
+<table id="table_id_example" class="display ">  <!--table-dark-->
+    <thead >
+        <tr>
+            <th  class="text-center">id</th>
+            <th  class="text-center">标题</th>
+            <th  class="text-center">举办学校</th>
+            <th  class="text-center">举办地点</th>
+            <th  class="text-center">举办时间</th>
+        </tr>
+    </thead>
+    <tbody class="">
+    </tbody>
+
+
+</table>
+</div>
+
+
+
+<script type="text/javascript">
+
+$(document).ready( function () {$('#table_id_example').DataTable({
+    "processing": true,      //翻页或者搜索的时候，前端是否给出“正在搜索”等提示信息
+    "lengthChange": false,   //关闭自选长度下拉框
+    "lengthMenu": [8],       //规定每页只显示8条数据
+    "info": false,           //关闭底部文字信息
+    ajax: {
+      url: '/fair_data/',
+      dataType: "json",
+      type: "POST",
+      async: false,
+      data: {
+        1: "1",
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+    },
+    language: {
+        "info": "显示从 _START_ 到 _END_ 总计 _TOTAL_ 条记录",
+        "infoEmpty": "显示从 0 到 0 of 0 条记录",
+        "lengthMenu": "每页显示 _MENU_ 条记录",
+        "emptyTable": "本仙女悄悄告诉你哦：没有记录这个信息哦~",
+        "loadingRecords": "别急别急~让本仙女歇一会~",
+        "zeroRecords": "本仙女悄悄告诉你哦：没有记录这个信息哦~",
+        "oPaginate":{
+          "sFirst" :"首页",
+          "sPrevious":"上一页",
+          "sNext":"下一页",
+          "sLast":"尾页"
+           },
+    },
+
+      columns: [
+            { data: function(row, type, set, meta) {
+                    var c = meta.settings._iDisplayStart + meta.row + 1;
+                    return c;}},
+            {"mRender" : function(mData,type,full) {
+            var html = [];
+            html.push('<a href="'+full.Fail_url+'" target="_blank" class="text-muted">'+full.Fail_title+'</a>');
+            return html.join('');
+            }},
+            { data: "Fail_college" },
+            { data: "Fail_site" },
+            { data: "Fail_time" },
+        ],
+
+
+} );
+} );
+
+</script>
+</body>
+</html>
